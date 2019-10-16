@@ -37,26 +37,50 @@ Vuex-Mapping is listing on each mutation and action. It get the payload and look
 ## Example
 
 ```ecmascript 6
+// create an user
 commit('saveUser', {
   id: 1,
   username: 'Bob',
   group: {
     id: 1,
     __typename: 'Group'
-  }
+  },
+  __typename: 'User'
 })
 
+// create a group
 commit('saveGroup', {
   id: 1,
   name: 'Admin',
   __typename: 'Group'
 })
 
-// Get saved user
-let user = action('loadUser')
+// update a group
+commit('saveGroup', {
+  id: 1,
+  description: 'Sleeping all time',
+  __typename: 'Group'
+})
+
+// create a second user
+commit('saveUser', {
+  id: 2,
+  username: 'Ann',
+  group: {
+    id: 1,
+    __typename: 'Group'  
+  },
+  __typename: 'User'
+})
+
+// Get saved users
+let bob = action('loadUserById', 1)
+let ann = action('loadUserById', 2)
 
 /* Output should be:
- * {id: 1, username: 'Bob', group: {id: 1, name: 'Admin', __typename: 'Group'}}
+ * {id: 1, username: 'Bob', group: {id: 1, name: 'Admin', description: 'Sleeping all time', __typename: 'Group'}}
+ * {id: 2, username: 'Ann', group: {id: 1, name: 'Admin', description: 'Sleeping all time', __typename: 'Group'}}
  */
-console.log(user)
+console.log(bob)
+console.log(ann)
 ```
