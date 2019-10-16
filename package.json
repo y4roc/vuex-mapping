@@ -1,6 +1,6 @@
 {
   "name": "vuex-mapping",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Mapping references between models",
   "main": "dist/mapping.min.js",
   "scripts": {
