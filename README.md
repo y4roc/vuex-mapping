@@ -23,6 +23,11 @@ const store = new Vuex.Store({
   plugins: [mapping],
   ...
 })
+
+new Vue({
+  store,
+  ...
+})
 ```
 
 ## Working with it
@@ -32,7 +37,7 @@ Vuex-Mapping is listing on each mutation and action. It get the payload and look
 ## Example
 
 ```ecmascript 6
-commit('update', {
+commit('saveUser', {
   id: 1,
   username: 'Bob',
   group: {
@@ -41,7 +46,7 @@ commit('update', {
   }
 })
 
-commit('update', {
+commit('saveGroup', {
   id: 1,
   name: 'Admin',
   __typename: 'Group'
