@@ -9,11 +9,14 @@ const mapping = store => {
             mutation.payload = store.dispatch('__save', mutation.payload)
         }
     })
-    store.registerModule('__mapping', {mutations: {
-            save (state, payload) {
+    store.registerModule('__mapping', {
+        mutations: {
+            save(state, payload) {
                 let type = payload.__typename
 
-                if (!state[type]) { state[type] = {} }
+                if (!state[type]) {
+                    state[type] = {}
+                }
 
                 state[type] = {
                     ...state[type],
@@ -25,7 +28,7 @@ const mapping = store => {
             }
         },
         actions: {
-            __save ({commit, state}, payload) {
+            __save({commit, state}, payload) {
                 const isEntity = (entity) => {
                     if (typeof entity !== 'object' || entity === null) {
                         return false
@@ -35,11 +38,14 @@ const mapping = store => {
 
                 const mapping = (entity) => {
                     for (let property in entity) {
-                        if (!isEntity(entity[property])) { continue }
+                        if (!isEntity(entity[property])) {
+                            continue
+                        }
                         let relation = entity[property]
 
                         if (state[relation.__typename] && state[relation.__typename][relation.id]) {
-                            commit('save', Object.assign(state[relation.__typename][relation.id], mapping(relation)))
+                            if (relation !== state[relation.__typename][relation.id])
+                                commit('save', Object.assign(state[relation.__typename][relation.id], mapping(relation)))
                         } else {
                             commit('save', mapping(relation))
                         }
@@ -48,7 +54,7 @@ const mapping = store => {
                 }
 
                 let proxy = {
-                    get (target, name) {
+                    get(target, name) {
                         let entity = target[name]
 
                         if (!isEntity(entity)) {
@@ -65,7 +71,7 @@ const mapping = store => {
 
                         return state[entity.__typename][entity.id]
                     },
-                    set (target, name, val) {
+                    set(target, name, val) {
                         return Reflect.set(...arguments)
                     }
                 }
@@ -83,7 +89,9 @@ const mapping = store => {
                 for (let i in _payload) {
                     let item = _payload[i]
 
-                    if (!isEntity(item)) { continue }
+                    if (!isEntity(item)) {
+                        continue
+                    }
                     item = new Proxy(mapping(item), proxy)
                     commit('save', item)
 
@@ -92,7 +100,8 @@ const mapping = store => {
 
                 return (Array.isArray(payload)) ? _payload : _payload[0]
             }
-        }})
+        }
+    })
 }
 
 export default mapping
